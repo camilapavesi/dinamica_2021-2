@@ -27,8 +27,8 @@ function [sys,x0,str,ts]=mdlInitializeSizes
 sizes=simsizes;
 sizes.NumContStates  = 6; % Numero de ecuaciones diferenciales a integrar
 sizes.NumDiscStates  = 0;  
-sizes.NumOutputs     = 2; % Numero de variables de salida que tendra el 
-%                           macro. T chaqueta, 
+sizes.NumOutputs     = 6; % Numero de variables de salida que tendra el 
+%                           macro.
 sizes.NumInputs      = 3; % Numero de variables de entrada que el macro 
 %                           aceptara. T entrada, T chaqueta, Flujo alim
 sizes.DirFeedthrough = 0;
@@ -39,8 +39,9 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0, 0, 0];
-
+x0 = [0.4, 0.5, 0, 6.8, 300, 300];
+% Dewasme: 0.4, 0.5, 0.8, 6.8
+% Biener 2012: 10, 
 
 % Estas 2 lineas de codigo NO se tocan.
 str=[]; 
@@ -58,12 +59,13 @@ Tm = x(5); %[K] temperatura del mosto
 Tc = x(6); %[K] temperatura de la chaqueta
 
 % Entradas
-Falim = u(1); %[L/s]? flujo de alimentacion de glucosa
-Fc    = u(2); %[L/s]? flujo de refrigerante en la chaqueta
+Falim = u(1); %[L/h] flujo de alimentacion de glucosa
+Fc    = u(2); %[L/h] flujo de refrigerante en la chaqueta
 
 % Parámetros
-D = Falim/V; %[s] tasa de dilución
+D = Falim/V; %[h] tasa de dilución
 O = 0;       %[g/L] concentración de saturación de oxígeno
+Sin = 350;   %puse esto pq me tiraba error, considerar sacar
 
 kx1 = 0.49; %coeficiente de rendimiento de biomasa 1
 kx2 = 0.05; %coeficiente de rendimiento de biomasa 2
@@ -76,11 +78,11 @@ kp3 = 1;    %coeficiente de rendimiento de subproducto 3
 mu_s   = 3.5;    %[gS/gX/h]
 mu_o   = 0.256;  %[gO2/gX/h]
 Ks     = 0.1;    %[gS/L]
-Kip    = 0;      % FALTA
+Kip    = 0.1;      % FALTA
 Ko     = 0.0001; %[gO2/L]
-Kp     = 0;      % FALTA
+Kp     = 0.5;      % FALTA
 kos    = 0.3968; %[gO2/gS] kos=ko1 para levadura
-kop    = 0;      % FALTA
+kop    = 0.001;      % FALTA
 rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
 r1     = min(rs, rscrit)/ks1; 
