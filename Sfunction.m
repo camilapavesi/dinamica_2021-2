@@ -29,7 +29,7 @@ sizes.NumContStates  = 6; % Numero de ecuaciones diferenciales a integrar
 sizes.NumDiscStates  = 0;  
 sizes.NumOutputs     = 6; % Numero de variables de salida que tendra el 
 %                           macro.
-sizes.NumInputs      = 3; % Numero de variables de entrada que el macro 
+sizes.NumInputs      = 4; % Numero de variables de entrada que el macro 
 %                           aceptara. T entrada, T chaqueta, Flujo alim
 sizes.DirFeedthrough = 0;
 sizes.NumSampleTimes = 1;
@@ -61,11 +61,13 @@ Tc = x(6); %[K] temperatura de la chaqueta
 % Entradas
 Falim = u(1); %[L/h] flujo de alimentacion de glucosa
 Fc    = u(2); %[L/h] flujo de refrigerante en la chaqueta
+Tc    = u(3); %[K] temperatura de la chaqueta
+Tinf  = u(4); %[K] temperatura ambiente
 
 % Parámetros
 D = Falim/V; %[h] tasa de dilución
-O = 0;       %[g/L] concentración de saturación de oxígeno
-Sin = 350;   %puse esto pq me tiraba error, considerar sacar
+O = 0.035;       %[g/L] concentración de saturación de oxígeno BUSCAR EN PAPER
+Sin = 350;   %
 
 kx1 = 0.49; %coeficiente de rendimiento de biomasa 1
 kx2 = 0.05; %coeficiente de rendimiento de biomasa 2
@@ -78,13 +80,15 @@ kp3 = 1;    %coeficiente de rendimiento de subproducto 3
 mu_s   = 3.5;    %[gS/gX/h]
 mu_o   = 0.256;  %[gO2/gX/h]
 Ks     = 0.1;    %[gS/L]
-Kip    = 0.1;      % FALTA
+Kip    = 10;     % Kie en dewasme
 Ko     = 0.0001; %[gO2/L]
-Kp     = 0.5;      % FALTA
+Kp     = 0.1;    % Ke en dewasme
 kos    = 0.3968; %[gO2/gS] kos=ko1 para levadura
-kop    = 0.001;      % FALTA
+kop    = 1.104;  %[gO2/gE] ko3 en dewasme
 rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
+% Estos r son los que generan los cambios en el metabolismo (crabtree,
+% overflow, etc)
 r1     = min(rs, rscrit)/ks1; 
 r2     = max(0, rs-rscrit)/ks2; 
 r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
@@ -96,7 +100,7 @@ dSdt = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
 dPdt = (kp2*r2-kp3*r3)*X - D*P;
 dVdt = Falim;
 dTmdt = 0;
-dTcdt = 0;
+dTcdt = 0; %temperatura que sale de la chaqueta
 
 sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTcdt];
 end
