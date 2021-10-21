@@ -29,7 +29,7 @@ sizes.NumContStates  = 6; % Numero de ecuaciones diferenciales a integrar
 sizes.NumDiscStates  = 0;  
 sizes.NumOutputs     = 6; % Numero de variables de salida que tendra el 
 %                           macro.
-sizes.NumInputs      = 5; % Numero de variables de entrada que el macro 
+sizes.NumInputs      = 4; % Numero de variables de entrada que el macro 
 %                           aceptara. T entrada, T chaqueta, Flujo alim
 sizes.DirFeedthrough = 0;
 sizes.NumSampleTimes = 1;
@@ -39,7 +39,7 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 310, 210]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 300, 100]; %X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
 % Biener 2012: 10, 
 
@@ -62,9 +62,9 @@ Tc = x(6); %[K] temperatura de la chaqueta
 Falim = u(1); %[L/h] flujo de alimentacion de glucosa
 Fc    = u(2); %[L/h] flujo de refrigerante en la chaqueta
 Tcin    = u(3); %[K] temperatura de la chaqueta
-Tinf  = u(4); %[K] temperatura ambiente
+Tinf  = u(3); %[K] temperatura ambiente
 %Tmin = u(5); %[K] temperatura mosto
-Talim = u(5); %[K] temperatura alimentacion
+Talim = u(4); %[K] temperatura alimentacion
 
 % Parámetros
 D = Falim/V; %[h] tasa de dilución
