@@ -56,20 +56,21 @@ S  = x(2); %[g/L] sustrato (glucosa)
 P  = x(3); %[g/L] subproducto (etanol)
 V  = x(4); %[L] volumen de cultivo
 Tm = x(5); %[K] temperatura del mosto
-Tc = x(6); %[K] temperatura de la chaqueta
+Tj = x(6); %[K] temperatura de la chaqueta
+
 
 % Entradas
 Falim = u(1); %[L/h] flujo de alimentacion de glucosa
-Fc    = u(2); %[L/h] flujo de refrigerante en la chaqueta
-Tcin    = u(3); %[K] temperatura de la chaqueta
+Fj    = u(2); %[L/h] flujo de refrigerante en la chaqueta
+Tjin  = u(3); %[K] temperatura de la chaqueta
 Tinf  = u(4); %[K] temperatura ambiente
 %Tmin = u(5); %[K] temperatura mosto
 Talim = u(5); %[K] temperatura alimentacion
 
 % Parámetros
 D = Falim/V; %[h] tasa de dilución
-O = 0.035;       %[g/L] concentración de saturación de oxígeno BUSCAR EN PAPER
-Sin = 350;   %
+O = 0.035;   %[g/L] concentración de saturación de oxígeno
+Sin = 350;   %[]
 
 kx1 = 0.49; %coeficiente de rendimiento de biomasa 1
 kx2 = 0.05; %coeficiente de rendimiento de biomasa 2
@@ -81,6 +82,7 @@ kp3 = 1;    %coeficiente de rendimiento de subproducto 3
 
 mu_s   = 3.5;    %[gS/gX/h]
 mu_o   = 0.256;  %[gO2/gX/h]
+
 Ks     = 0.1;    %[gS/L]
 Kip    = 10;     % Kie en dewasme
 Ko     = 0.0001; %[gO2/L]
@@ -89,10 +91,23 @@ kos    = 0.3968; %[gO2/gS] kos=ko1 para levadura
 kop    = 1.104;  %[gO2/gE] ko3 en dewasme
 rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
-Vc = 3 ;%[L ]  volumen chaqueta OJO, cambiar
-UA =   3750;       %kcal/(ºC*hr)
-rhojcpj  =   1000;       %kcal/(m^3*K)
-rhocp =   500;        %kcal/(m^3*K)
+
+Vj     = 3 ;         %[L ]  volumen chaqueta OJO, cambiar
+UAj    = 3750;       %kcal/(ºC*hr)
+U      = 1000;       %W/m2K      OJO SI []>50g/L U ES MUCHO MENOR A 1000
+UAe    = 0.75;       %W/K
+rhojcpj= 1000;       %kcal/(m^3*K)
+rhocp  = 500;        %kcal/(m^3*K)
+mf     = Falim;      %[L/h] = [kg/h]   DUDA DE SI INCORPORAR LA DENSIDAD DE GLUCOSA (DIEGO DIJO QUE ERA AGUA)
+mj     = Fj;         %[L/h] = [kg/h]
+cpf    = 4.19;       %kJ/kgK
+cpj    = 4.19;       %kJ/kgK
+
+% Calores
+qalim  = mf*cpf*(Tm-Talim); % alimentación
+qj     = mj*cpj*(Tjin-Tj);  % chaqueta
+qe     = UAe*(Tm-Tinf);     % environment
+qs     = 0;                 % agitador
 
 
 % Estos r son los que generan los cambios en el metabolismo (crabtree,
@@ -107,10 +122,10 @@ dXdt = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
 dSdt = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
 dPdt = (kp2*r2-kp3*r3)*X - D*P;
 dVdt = Falim;
-dTmdt = (Falim/V)*(Tm-Talim)-((UA*(Tm-Tc))/(V*rhocp)); %(dH/rhocp)*r 
-dTcdt = (Fc/Vc)*(Tcin-Tc)+((UA*(Tm-Tc))/(Vc*rhojcpj)); %temperatura que sale de la chaqueta
+dTmdt = qalim - qj ; %(dH/rhocp)*r   FALTA ambiente
+dTjdt = (Fj/Vj)*(Tjin-Tj)+((UAj*(Tm-Tj))/(Vj*rhojcpj)); %temperatura que sale de la chaqueta
 
-sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTcdt];
+sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTjdt];
 end
 
 function sys=mdlOutputs(~,x,~)
