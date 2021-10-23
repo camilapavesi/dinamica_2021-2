@@ -1,3 +1,4 @@
+
 function [sys, x0,str,ts]=Sfunction(t,x,u,flag)
 
 % Este conjunto de lineas de codigo NO se modifica.
@@ -70,7 +71,7 @@ Talim = u(5); %[K] temperatura alimentacion
 % Parámetros
 D = Falim/V; %[h] tasa de dilución
 O = 0.035;   %[g/L] concentración de saturación de oxígeno
-Sin = 350;   %[]
+Sin = 350;   %[g/L] concentración de glucosa en alimentación
 
 kx1 = 0.49; %coeficiente de rendimiento de biomasa 1
 kx2 = 0.05; %coeficiente de rendimiento de biomasa 2
@@ -92,22 +93,23 @@ kop    = 1.104;  %[gO2/gE] ko3 en dewasme
 rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
 
-Vj     = 3 ;         %[L ]  volumen chaqueta OJO, cambiar
-UAj    = 3750;       %kcal/(ºC*hr)
-U      = 1000;       %W/m2K      OJO SI []>50g/L U ES MUCHO MENOR A 1000
-UAe    = 0.75;       %W/K
-rhojcpj= 1000;       %kcal/(m^3*K)
-rhocp  = 500;        %kcal/(m^3*K)
+Vj     = 3 ;         %[L]              volumen chaqueta OJO, cambiar
+UAj    = 0.1 ;         %[J/(ºC*h)]       VALOR INVENTADO GG
+U      = 1000;       %[W/m2K]          OJO SI []>50g/L U ES MUCHO MENOR A 1000
+UAe    = 0.75;       %[W/K]
+rhojcpj= 4.184;      %[J/(m^3*K)]
+rhocp  = 500*4184;   %[J/(m^3*K)]
 mf     = Falim;      %[L/h] = [kg/h]   DUDA DE SI INCORPORAR LA DENSIDAD DE GLUCOSA (DIEGO DIJO QUE ERA AGUA)
 mj     = Fj;         %[L/h] = [kg/h]
-cpf    = 4.19;       %kJ/kgK
-cpj    = 4.19;       %kJ/kgK
+cpf    = 4184;       %[J/kgK]
+cpj    = 4184;       %[J/kgK]
 
 % Calores
 qalim  = mf*cpf*(Tm-Talim); % alimentación
 qj     = mj*cpj*(Tjin-Tj);  % chaqueta
 qe     = UAe*(Tm-Tinf);     % environment
 qs     = 0;                 % agitador
+qp     = 0;                 % levadura
 
 
 % Estos r son los que generan los cambios en el metabolismo (crabtree,
@@ -118,12 +120,12 @@ r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
 
 
 % Ecuaciones de Estado (balances de masa)
-dXdt = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
-dSdt = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
-dPdt = (kp2*r2-kp3*r3)*X - D*P;
-dVdt = Falim;
-dTmdt = qalim - qj ; %(dH/rhocp)*r   FALTA ambiente
-dTjdt = (Fj/Vj)*(Tjin-Tj)+((UAj*(Tm-Tj))/(Vj*rhojcpj)); %temperatura que sale de la chaqueta
+dXdt  = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
+dSdt  = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
+dPdt  = (kp2*r2-kp3*r3)*X - D*P;
+dVdt  = Falim;
+dTmdt = qp - qalim - qj - qe + qs;                       %(dH/rhocp)*r   
+dTjdt = (Fj/Vj)*(Tj-Tjin)+ ((UAj)*(Tm-Tj)/(Vj*rhojcpj)); %temperatura que sale de la chaqueta 
 
 sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTjdt];
 end
