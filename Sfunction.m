@@ -125,7 +125,7 @@ dSdt  = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
 dPdt  = (kp2*r2-kp3*r3)*X - D*P;
 dVdt  = Falim;
 dTmdt = qp - qalim - qj - qe + qs;                       %(dH/rhocp)*r   
-dTjdt = (Fj/Vj)*(Tj-Tjin)+ ((UAj)*(Tm-Tj)/(Vj*rhojcpj)); %temperatura que sale de la chaqueta 
+dTjdt = 0;%(Fj/Vj)*(Tj-Tjin)+ ((UAj)*(Tm-Tj)/(Vj*rhojcpj)); %temperatura que sale de la chaqueta 
 
 sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTjdt];
 end
