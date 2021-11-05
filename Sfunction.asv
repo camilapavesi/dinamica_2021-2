@@ -40,7 +40,7 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 310, 200]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 310, 210]; %X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
 % Biener 2012: 10, 
 
@@ -92,20 +92,17 @@ kos    = 0.3968; %[gO2/gS] kos=ko1 para levadura
 kop    = 1.104;  %[gO2/gE] ko3 en dewasme
 rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
-ro2    = 0.1184; %[gO2/gDCW h]
+
 Vj     = 10;         %[L]             
-UAj    = 3750*4184;  %[J/(h*K)]
+UAj    = 0.1 ;       %[J/(ºC*h)]       VALOR INVENTADO GG
+U      = 1000;       %[W/m2K]          OJO SI []>50g/L U ES MUCHO MENOR A 1000
 UAe    = 0.75;       %[W/K]
-%rhojcpj= 4.184;      %[J/(m^3*K)]
-%rhomcpm= 500*4184;   %[J/(m^3*K)]
-rhom   = 1080;       %[kg/m3]
-rhoj   = 1000;       %[kg/m3]  
+rhojcpj= 4.184;      %[J/(m^3*K)]
+rhocp  = 500*4184;   %[J/(m^3*K)]
 mf     = Falim*1.13; %[kg/h]
 mj     = Fj;         %[L/h] = [kg/h]
 cpf    = 4184;       %[J/kgK]
-cpm    = 4184;       %[J/kgK]
 cpj    = 4184;       %[J/kgK]
-dH     = 91.2*10^6/180;      %[J/kg]
 
 % Calores
 qalim  = mf*cpf*(Tm-Talim); % alimentación
@@ -126,13 +123,9 @@ r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
 dXdt  = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
 dSdt  = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
 dPdt  = (kp2*r2-kp3*r3)*X - D*P;
-if V < 20
-    dVdt  = Falim;
-else
-    dVdt = 0;
-end   
-dTmdt = Falim*(Tm-Talim)/V + dH*ro2/(32*rhom*cpm) - UAj*(Tm - Tj)/(V*rhom*cpm) + qs;  
-dTjdt = (Fj/Vj)*(Tjin-Tj)+ UAj*(Tm-Tj)/(Vj*rhoj*cpj);
+dVdt  = Falim;
+dTmdt = Falim*Talim/V + dH*ro2/(32*rhocp*Cheatcp) - Kt*At*(Tm - Tj)/(;                       %(dH/rhocp)*r   
+dTjdt = 0;%(Fj/Vj)*(Tj-Tjin)+ ((UAj)*(Tm-Tj)/(Vj*rhojcpj)); %temperatura que sale de la chaqueta 
 
 sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTjdt];
 end
