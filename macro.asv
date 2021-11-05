@@ -3,7 +3,7 @@ out = sim("mysim11.slx");
 
 samplet = 1;
 
-step    = 2;
+step    = 1.95;
 
 t = out.data1(:,1);
 t = t(step/samplet:end);
