@@ -40,7 +40,7 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 310, 200]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 310, 300]; %X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
 % Biener 2012: 10, 
 
