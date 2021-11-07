@@ -40,7 +40,7 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 297, 285]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 310, 285]; %X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
 % Biener 2012: 10, 
 
@@ -93,7 +93,7 @@ rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
 ro2    = 0.1184; %[gO2/gDCW h]
 Vj     = 10;         %[L]             
-UAj    = 3750*4184;  %[J/(h*K)]
+UAj    = 3750*4184*5;  %[J/(h*K)]
 rhom   = 1080;       %[kg/m3]
 rhoj   = 1000;       %[kg/m3]  
 masam  = V*rhom/1000;%[kg]
