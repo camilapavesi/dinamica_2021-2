@@ -1,7 +1,7 @@
 %% Funcion de transferencia global
 out = sim("mysim11.slx");
 samplet = 1;
-step    = 2;
+step    = 15;
 
 t = out.data1(:,1);
 t = t(step/samplet:end);
@@ -13,7 +13,7 @@ F = F(step/samplet:end);
 
 datos1 = iddata(X,F,samplet);
 
-sys1 = tfest(datos1,2,1);
+sys1 = tfest(datos1,3,1);
 
 [num1 , den1] = tfdata(sys1);
 num1 = cell2mat(num1);
@@ -21,28 +21,14 @@ den1 = cell2mat(den1);
 num1 = num1/den1(end);
 den1 = den1/den1(end);
 
-%% Funcion de transferencia Tm Falim
-out = sim("mysim11.slx");
-samplet = 1;
-step2   = 13;
-
-t2 = out.data2(:,1);
-t2 = t2(step2/samplet:end);
-T2 = out.data2(:,2);
-T2 = T2(step2/samplet:end);
-
-F2 = out.input2;
-F2 = F2(step2/samplet:end);
-
-datos2 = iddata(T2,F2,samplet);
-
-sys2 = tfest(datos2,1,0);
-
-[num2 , den2] = tfdata(sys2);
-num2 = cell2mat(num2);
-den2 = cell2mat(den2);
-num2 = num2/den2(end);
-den2 = den2/den2(end);
+plot(t,X,'-k','linewidth',1.5); hold on; grid on;
+T1ft = out.data1(:,3);
+T1ft = T1ft(step/samplet:end);
+plot(t,T1ft,'--r','linewidth',1.5); hold off
+xlabel('t [hr]')
+ylabel('Temperatura mosto [K]')
+legend('TM','TM_{ft}','location','best')
+title('Función de Transferencia TM/Tj')
 
 %% Funcion de transferencia Tm Fj
 out = sim("mysim11.slx");
@@ -59,7 +45,7 @@ F3 = F3(step3/samplet:end);
 
 datos3 = iddata(T3,F3,samplet);
 
-sys3 = tfest(datos3,1,0);
+sys3 = tfest(datos3,2,0);
 
 [num3 , den3] = tfdata(sys3);
 num3 = cell2mat(num3);
