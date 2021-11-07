@@ -40,7 +40,7 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 310, 300]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 297, 285]; %X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
 % Biener 2012: 10, 
 
@@ -65,7 +65,6 @@ Falim = u(1); %[L/h] flujo de alimentacion de glucosa
 Fj    = u(2); %[L/h] flujo de refrigerante en la chaqueta
 Tjin  = u(3); %[K] temperatura de la chaqueta
 Tinf  = u(4); %[K] temperatura ambiente
-%Tmin = u(5); %[K] temperatura mosto
 Talim = u(5); %[K] temperatura alimentacion
 
 % Parámetros
@@ -94,25 +93,22 @@ rs     = mu_s*S/(S+Ks);
 rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
 ro2    = 0.1184; %[gO2/gDCW h]
 Vj     = 10;         %[L]             
-UAj    = 3750*4184;  %[J/(h*K)]
-UAe    = 0.75;       %[W/K]
-%rhojcpj= 4.184;      %[J/(m^3*K)]
-%rhomcpm= 500*4184;   %[J/(m^3*K)]
+UAj    = 3750*4184*100;  %[J/(h*K)]
 rhom   = 1080;       %[kg/m3]
 rhoj   = 1000;       %[kg/m3]  
+masam  = V*rhom/1000;%[kg]
 mf     = Falim*1.13; %[kg/h]
-mj     = Fj;         %[L/h] = [kg/h]
+mj     = Fj;         %[kg/h]
 cpf    = 4184;       %[J/kgK]
 cpm    = 4184;       %[J/kgK]
 cpj    = 4184;       %[J/kgK]
 dH     = 91.2*10^6/180;      %[J/kg]
 
 % Calores
-qalim  = mf*cpf*(Tm-Talim); % alimentación
-qj     = mj*cpj*(Tjin-Tj);  % chaqueta
-qe     = UAe*(Tm-Tinf);     % environment
-qs     = 250;               % agitador
-qp     = 0;                 % levadura
+qalim  = Falim*(Tm-Talim)/V;          % alimentación
+qj     = UAj*(Tm - Tj)/(V*rhom*cpm);  % chaqueta
+qs     = 250/(masam*cpm);                % agitador
+qp     = dH*ro2/(32*rhom*cpm);        % levadura
 
 
 % Estos r son los que generan los cambios en el metabolismo (crabtree,
@@ -131,7 +127,7 @@ if V < 20
 else
     dVdt = 0;
 end   
-dTmdt = Falim*(Tm-Talim)/V + dH*ro2/(32*rhom*cpm) - UAj*(Tm - Tj)/(V*rhom*cpm) + qs/(mr*cpm;  
+dTmdt = -qalim + qp - qj + qs;  
 dTjdt = (Fj/Vj)*(Tjin-Tj)+ UAj*(Tm-Tj)/(Vj*rhoj*cpj);
 
 sys = [dXdt, dSdt, dPdt, dVdt, dTmdt, dTjdt];

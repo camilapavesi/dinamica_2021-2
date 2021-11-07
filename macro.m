@@ -13,7 +13,7 @@ F = F(step/samplet:end);
 
 datos1 = iddata(X,F,samplet);
 
-sys1 = tfest(datos1,3,1);
+sys1 = tfest(datos1,2,1);
 
 [num1 , den1] = tfdata(sys1);
 num1 = cell2mat(num1);
@@ -26,9 +26,9 @@ T1ft = out.data1(:,3);
 T1ft = T1ft(step/samplet:end);
 plot(t,T1ft,'--r','linewidth',1.5); hold off
 xlabel('t [hr]')
-ylabel('Temperatura mosto [K]')
-legend('TM','TM_{ft}','location','best')
-title('Función de Transferencia TM/Tj')
+ylabel('Tasa específica de crecimiento')
+legend('μ','μ_{ft}','location','best')
+title('Función de Transferencia μ/Falim')
 
 %% Funcion de transferencia Tm Fj
 out = sim("mysim11.slx");
@@ -59,51 +59,6 @@ T3ft = T3ft(step3/samplet:end);
 plot(t3,T3ft,'--r','linewidth',1.5); hold off
 xlabel('t [hr]')
 ylabel('Temperatura mosto [K]')
-legend('TM','TM_{ft}','location','best')
-title('Función de Transferencia TM/Tj')
+legend('Tm','Tm_{ft}','location','best')
+title('Función de Transferencia Tm/Tj')
 
-%% Funcion de transferencia Tj Fj
-out = sim("mysim11.slx");
-samplet = 1;
-step4   = 13;
-
-t4 = out.data4(:,1);
-t4 = t4(step4/samplet:end);
-T4 = out.data4(:,2);
-T4 = T4(step4/samplet:end);
-
-F4 = out.input4;
-F4 = F4(step4/samplet:end);
-
-datos4 = iddata(T4,F4,samplet);
-
-sys4 = tfest(datos4,2,1);
-
-[num4 , den4] = tfdata(sys4);
-num4 = cell2mat(num4);
-den4 = cell2mat(den4);
-num4 = num4/den4(end);
-den4 = den4/den4(end);
-
-%% Funcion de transferencia Tj Falim
-out = sim("mysim11.slx");
-samplet = 1;
-step5   = 13;
-
-t5 = out.data5(:,1);
-t5 = t5(step5/samplet:end);
-T5 = out.data5(:,2);
-T5 = T5(step5/samplet:end);
-
-F5 = out.input5;
-F5 = F5(step5/samplet:end);
-
-datos5 = iddata(T5,F5,samplet);
-
-sys5 = tfest(datos5,2,0);
-
-[num5 , den5] = tfdata(sys5);
-num5 = cell2mat(num5);
-den5 = cell2mat(den5);
-num5 = num5/den5(end);
-den5 = den5/den5(end);
