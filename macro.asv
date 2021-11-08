@@ -21,14 +21,14 @@ den1 = cell2mat(den1);
 num1 = num1/den1(end);
 den1 = den1/den1(end);
 
-plot(t,X,'-k','linewidth',1.5); hold on; grid on;
-T1ft = out.data1(:,3);
-T1ft = T1ft(step/samplet:end);
-plot(t,T1ft,'--r','linewidth',1.5); hold off
-xlabel('t [hr]')
-ylabel('Tasa específica de crecimiento')
-legend('μ','μ_{ft}','location','best')
-title('Función de Transferencia μ/Falim')
+%plot(t,X,'-k','linewidth',1.5); hold on; grid on;
+%T1ft = out.data1(:,3);
+%T1ft = T1ft(step/samplet:end);
+%plot(t,T1ft,'--r','linewidth',1.5); hold off
+%%%xlabel('t [hr]')
+%ylabel('Tasa específica de crecimiento')
+%legend('μ','μ_{ft}','location','best')
+%title('Función de Transferencia μ/Falim')
 
 time = out.mu_perturb(:,1);
 mu_ref = out.mu_perturb(:,2);
@@ -96,9 +96,7 @@ plot(t,X,'-b','linewidth',1.5); hold on; grid on;
 plot(t,S,'-m','linewidth',1.5);
 plot(t,P,'-r','linewidth',1.5);
 plot(t,V,'-k','linewidth',1.5); hold off
-plot(t,TM,'-r','linewidth',1.5); hold on; grid on;
-plot(t,TJ,'-b','linewidth',1.5); hold off
-xlabel('t[h]')
-ylabel('T(K)')
-legend('TM', 'TJ')
-title('Simulación balance de energía con escalón de Tj t=25h')
+xlabel('t [h]')
+ylabel('-')
+legend('X(g/L)','S (g/L)','P (g/L)','V (L)')
+title('Simulación balance de masa c')

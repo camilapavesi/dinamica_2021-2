@@ -30,7 +30,7 @@ sizes.NumContStates  = 6; % Numero de ecuaciones diferenciales a integrar
 sizes.NumDiscStates  = 0;  
 sizes.NumOutputs     = 6; % Numero de variables de salida que tendra el 
 %                           macro.
-sizes.NumInputs      = 5; % Numero de variables de entrada que el macro 
+sizes.NumInputs      = 4; % Numero de variables de entrada que el macro 
 %                           aceptara. T entrada, T chaqueta, Flujo alim
 sizes.DirFeedthrough = 0;
 sizes.NumSampleTimes = 1;
@@ -40,9 +40,9 @@ sys=simsizes(sizes); % Expresion que permite que el macro funcione bien. No
 % se debe borrar.
 
 % Este es el SS o condiciones iniciales que pueden editar después de la parte a).
-x0 = [0.4, 0.5, 0, 6.8, 310, 285]; %X0, S0, E0, V0, Tmosto, Tchaqueta
+x0 = [0.4, 0.5, 0, 6.8, 298, 303]; 
+%     X0, S0, E0, V0, Tmosto, Tchaqueta
 % Dewasme: 0.4, 0.5, 0.8, 6.8
-% Biener 2012: 10, 
 
 % Estas 2 lineas de codigo NO se tocan.
 str=[]; 
@@ -64,8 +64,7 @@ Tj = x(6); %[K] temperatura de la chaqueta
 Falim = u(1); %[L/h] flujo de alimentacion de glucosa
 Fj    = u(2); %[L/h] flujo de refrigerante en la chaqueta
 Tjin  = u(3); %[K] temperatura de la chaqueta
-Tinf  = u(4); %[K] temperatura ambiente
-Talim = u(5); %[K] temperatura alimentacion
+Talim = u(4); %[K] temperatura alimentacion
 
 % Parámetros
 D = Falim/V; %[h] tasa de dilución
@@ -80,36 +79,34 @@ ks2 = 1;    %coeficiente de rendimiento de sustrato 2
 kp2 = 0.48; %coeficiente de rendimiento de subproducto 2
 kp3 = 1;    %coeficiente de rendimiento de subproducto 3
 
-mu_s   = 3.5;    %[gS/gX/h]
-mu_o   = 0.256;  %[gO2/gX/h]
-
-Ks     = 0.1;    %[gS/L]
-Kip    = 10;     % Kie en dewasme
-Ko     = 0.0001; %[gO2/L]
-Kp     = 0.1;    % Ke en dewasme
-kos    = 0.3968; %[gO2/gS] kos=ko1 para levadura
-kop    = 1.104;  %[gO2/gE] ko3 en dewasme
-rs     = mu_s*S/(S+Ks);
-rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));
-ro2    = 0.1184; %[gO2/gDCW h]
-Vj     = 10;         %[L]             
-UAj    = 3750*4184*5;  %[J/(h*K)]
-rhom   = 1080;       %[kg/m3]
-rhoj   = 1000;       %[kg/m3]  
-masam  = V*rhom/1000;%[kg]
-mf     = Falim*1.13; %[kg/h]
-mj     = Fj;         %[kg/h]
-cpf    = 4184;       %[J/kgK]
-cpm    = 4184;       %[J/kgK]
-cpj    = 4184;       %[J/kgK]
-dH     = 91.2*10^6/180;      %[J/kg]
+mu_s   = 3.5;                               %[gS/gX/h]
+mu_o   = 0.256;                             %[gO2/gX/h]
+Ks     = 0.1;                               %[gS/L]
+Kip    = 10;                                % Kie en dewasme
+Ko     = 0.0001;                            %[gO2/L]
+Kp     = 0.1;                               % Ke en dewasme
+kos    = 0.3968;                            %[gO2/gS] kos=ko1 para levadura
+kop    = 1.104;                             %[gO2/gE] ko3 en dewasme
+rs     = mu_s*S/(S+Ks);                     %[-]
+rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));   %[-]
+ro2    = 0.1184;                            %[gO2/gDCW h]
+Vj     = 10;                                %[L]             
+UAj    = 3750*4184*5;                       %[J/(h*K)]
+rhom   = 1080;                              %[kg/m3]
+rhoj   = 1000;                              %[kg/m3]  
+masam  = V*rhom/1000;                       %[kg]
+mf     = Falim*1.13;                        %[kg/h]
+mj     = Fj;                                %[kg/h]
+cpf    = 4184;                              %[J/kgK]
+cpm    = 4184;                              %[J/kgK]
+cpj    = 4184;                              %[J/kgK]
+dH     = 91.2*10^6/180;                     %[J/kg]
 
 % Calores
 qalim  = Falim*(Tm-Talim)/V;          % alimentación
 qj     = UAj*(Tm - Tj)/(V*rhom*cpm);  % chaqueta
-qs     = 250/(masam*cpm);                % agitador
+qs     = 250/(masam*cpm);             % agitador
 qp     = dH*ro2/(32*rhom*cpm);        % levadura
-
 
 % Estos r son los que generan los cambios en el metabolismo (crabtree,
 % overflow, etc)
@@ -117,8 +114,7 @@ r1     = min(rs, rscrit)/ks1;
 r2     = max(0, rs-rscrit)/ks2; 
 r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
 
-
-% Ecuaciones de Estado (balances de masa)
+% Ecuaciones de Estado (balances de masa y energía)
 dXdt  = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
 dSdt  = -(ks1*r1+ks2*r2)*X + D*Sin - D*S;
 dPdt  = (kp2*r2-kp3*r3)*X - D*P;
