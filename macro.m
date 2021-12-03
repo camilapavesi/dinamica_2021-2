@@ -70,7 +70,7 @@ plot(t3,T3ft,'--r','linewidth',1.5); hold off
 xlabel('t [hr]')
 ylabel('Temperatura mosto [K]')
 legend('Tm','Tm_{ft}','location','best')
-title('Función de Transferencia Tm/Tj')
+title('Función de Transferencia Tm/Fj')
 
 time = out.Tm_perturb(:,1);
 Tm_ref = out.Tm_perturb(:,2);
@@ -80,7 +80,7 @@ plot(time, Tm_perturb,'--r','linewidth',1.5); hold off
 xlabel('t [hr]')
 ylabel('Temperatura del mosto [K]')
 legend('Tm referencia','Tm perturbado','location','best')
-title('Perturbación de Tm mediante un escalón en Falim')
+title('Perturbación de Tm mediante un escalón en Fj')
 
 %% grafico
 
