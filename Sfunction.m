@@ -82,14 +82,15 @@ kp3 = 1;    %coeficiente de rendimiento de subproducto 3
 mu_s   = 3.5;                               %[gS/gX/h]
 mu_o   = 0.256;                             %[gO2/gX/h]
 Ks     = 0.1;                               %[gS/L]
-Kip    = 10;                                % Kie en dewasme
+Kip    = 10;                                %[gP/L] Kie en dewasme
 Ko     = 0.0001;                            %[gO2/L]
-Kp     = 0.1;                               % Ke en dewasme
+Kp     = 0.1;                               %[gP/L] Ke en dewasme
 kos    = 0.3968;                            %[gO2/gS] kos=ko1 para levadura
 kop    = 1.104;                             %[gO2/gE] ko3 en dewasme
-rs     = mu_s*S/(S+Ks);                     %[-]
-rscrit = mu_o*O*Kip/(kos*(O+Ko)*(Kip+P));   %[-]
-ro2    = 0.1184;                            %[gO2/gDCW h]
+rs     = mu_s*S/(S+Ks);                     %[gS/gX*h]
+ro     = mu_o*O*Kip/((O+Ko)*(Kip+P));       %[gO2/gX*h]
+rscrit = ro/kos;                            %[gS/gX*h]
+ro2    = 0.1184;                            %[gO2/gX*h]
 Vj     = 10;                                %[L]             
 UAj    = 3750*4184*5;                       %[J/(h*K)]
 rhom   = 1080;                              %[kg/m3]
@@ -102,17 +103,21 @@ cpm    = 4184;                              %[J/kgK]
 cpj    = 4184;                              %[J/kgK]
 dH     = 91.2*10^6/180;                     %[J/kg]
 
-% Calores
-qalim  = Falim*(Tm-Talim)/V;          % alimentación
-qj     = UAj*(Tm - Tj)/(V*rhom*cpm);  % chaqueta
-qs     = 250/(masam*cpm);             % agitador
-qp     = dH*ro2/(32*rhom*cpm);        % levadura
-
 % Estos r son los que generan los cambios en el metabolismo (crabtree,
 % overflow, etc)
 r1     = min(rs, rscrit)/ks1; 
 r2     = max(0, rs-rscrit)/ks2; 
 r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
+
+% Calores REVISAR UNIDADES DE TODOS
+qalim  = Falim*(Tm-Talim)/V;                % alimentación [K/h]
+qj     = UAj*(Tm - Tj)*1000/(V*rhom*cpm);   % chaqueta [K/h]
+%[/h]*K/[L/m3]
+qs     = 250*3600/(masam*cpm);                   % agitador [K/h]
+qp     = dH*(ks1*r1+ks2*r2)*X/(rhom*cpm);                % levadura [K/h]
+%[J/kg]*[gS/gX*h]*[gS/L] / [gO2/molO2]*[kg/m3]*[J/kg*K]
+% taller: (dH*r/rhocp)
+% K/h
 
 % Ecuaciones de Estado (balances de masa y energía)
 dXdt  = (kx1*r1 + kx2*r2 + kx3*r3)*X - D*X;
