@@ -113,7 +113,7 @@ r3     = max(0, kos*(rscrit-rs)*P/(kop*(P+Kp)))/kp3;
 qalim  = Falim*(Tm-Talim)/V;                % alimentación [K/h]
 qj     = UAj*(Tm - Tj)*1000/(V*rhom*cpm);   % chaqueta [K/h]
 %[/h]*K/[L/m3]
-qs     = 250*3600/(masam*cpm);                   % agitador [K/h]
+qs     = 50*3600/(masam*cpm);                   % agitador [K/h]
 qp     = dH*(ks1*r1+ks2*r2)*X/(rhom*cpm);                % levadura [K/h]
 %[J/kg]*[gS/gX*h]*[gS/L] / [gO2/molO2]*[kg/m3]*[J/kg*K]
 % taller: (dH*r/rhocp)

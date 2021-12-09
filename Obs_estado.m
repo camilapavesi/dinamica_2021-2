@@ -94,7 +94,7 @@ cpj    = 4184;                              %[J/kgK]
 % Calores REVISAR UNIDADES DE TODOS
 qalim  = Falim*(Tm-Talim)/V;                % alimentación [K/h]
 qj     = UAj*(Tm - Tj)*1000/(V*rhom*cpm);   % chaqueta [K/h]
-qs     = 250*3600/(masam*cpm);                   % agitador [K/h]
+qs     = 50*3600/(masam*cpm);                   % agitador [K/h]
 qp     = qalim + qj - qs;                % levadura [K/h]
 
 y = [qalim, qj, qs, qp];
