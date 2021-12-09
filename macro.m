@@ -43,7 +43,7 @@ title('Perturbación de μ mediante un escalón en Falim')
 %% Funcion de transferencia Tm Fj
 out = sim("mysim11.slx");
 samplet = 1;
-step3   = 13;
+step3   = 15;
 
 t3 = out.data3(:,1);
 t3 = t3(step3/samplet:end);
@@ -55,7 +55,7 @@ F3 = F3(step3/samplet:end);
 
 datos3 = iddata(T3,F3,samplet);
 
-sys3 = tfest(datos3,2,0);
+sys3 = tfest(datos3,1,0,1);
 
 [num3 , den3] = tfdata(sys3);
 num3 = cell2mat(num3);
