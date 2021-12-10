@@ -127,6 +127,7 @@ if V < 20
     dVdt  = Falim;
 else
     dVdt = 0;
+    set_param(gcs, 'SimulationCommand', 'stop');
 end   
 dTmdt = -qalim + qp - qj + qs;  
 dTjdt = (Fj/Vj)*(Tjin-Tj)+ UAj*(Tm-Tj)/(Vj*rhoj*cpj);

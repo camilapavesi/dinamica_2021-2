@@ -63,14 +63,14 @@ den3 = cell2mat(den3);
 num3 = num3/den3(end);
 den3 = den3/den3(end);
 
-plot(t3,T3,'-k','linewidth',1.5); hold on; grid on;
-T3ft = out.data3(:,3);
-T3ft = T3ft(step3/samplet:end);
-plot(t3,T3ft,'--r','linewidth',1.5); hold off
-xlabel('t [hr]')
-ylabel('Temperatura mosto [K]')
-legend('Tm','Tm_{ft}','location','best')
-title('Función de Transferencia Tm/Fj')
+%plot(t3,T3,'-k','linewidth',1.5); hold on; grid on;
+%T3ft = out.data3(:,3);
+%T3ft = T3ft(step3/samplet:end);
+%plot(t3,T3ft,'--r','linewidth',1.5); hold off
+%xlabel('t [hr]')
+%label('Temperatura mosto [K]')
+%legend('Tm','Tm_{ft}','location','best')
+%title('Función de Transferencia Tm/Fj')
 
 time = out.Tm_perturb(:,1);
 Tm_ref = out.Tm_perturb(:,2);
